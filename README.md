@@ -2,4 +2,4 @@
 Random pieces of DayZ code. 
 
 ## Goto DayZ folder
-%localappdata%/DayZ
+<code>%localappdata%/DayZ

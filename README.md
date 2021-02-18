@@ -2,7 +2,9 @@
 Random pieces of DayZ code. 
 
 ## Misc
-### Goto DayZ folder
+#### Goto DayZ folder
 <code>
   %localappdata%/DayZ
 </code>
+
+`dummy`

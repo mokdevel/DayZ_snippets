@@ -9,6 +9,9 @@ Random pieces of DayZ code.
 * Server setup: https://write.corbpie.com/installing-and-setting-up-a-dayz-standalone-server-on-windows-server-2016-guide/
 * First Mod: https://medium.com/@jkamienski/beginners-guide-to-dayz-mods-development-de3055a10d31
 
+### Tools ###
+* Camera etc: https://github.com/Arkensor/DayZCommunityOfflineMode
+
 ## Misc
 #### Goto DayZ folder
 <code>

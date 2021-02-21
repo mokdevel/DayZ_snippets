@@ -5,6 +5,7 @@ Random pieces of DayZ code.
 https://github.com/BohemiaInteractive/DayZ-Samples
 
 https://github.com/CypherMediaGIT/DayZClassNames2020/blob/master/classname2020
+https://write.corbpie.com/installing-and-setting-up-a-dayz-standalone-server-on-windows-server-2016-guide/
 
 ## Misc
 #### Goto DayZ folder

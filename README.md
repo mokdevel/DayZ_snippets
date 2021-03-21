@@ -18,5 +18,3 @@ Random pieces of DayZ code.
 <code>
   %localappdata%/DayZ
 </code>
-
-`dummy`

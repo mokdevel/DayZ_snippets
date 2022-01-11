@@ -1,11 +1,12 @@
 # DayZ_snippets
-Random pieces of DayZ code. 
+Random pieces of DayZ code. I use this as a personal notebook on various things.
 
 ## Links to good resources ##
 * Syntax: https://community.bistudio.com/wiki/DayZ:Enforce_Script_Syntax
 * Samples: https://github.com/BohemiaInteractive/DayZ-Samples
 * Class names: https://github.com/CypherMediaGIT/DayZClassNames2020/blob/master/classname2020
-* Zeroy’s DayZ Code Explorer (doxygen): https://dayzexplorer.zeroy.com/index.html
+* Code explorer (for 1.06): https://dayzexplorer.zeroy.com
+
 ### HowTo ###
 * Server setup: https://write.corbpie.com/installing-and-setting-up-a-dayz-standalone-server-on-windows-server-2016-guide/
 * First Mod: https://medium.com/@jkamienski/beginners-guide-to-dayz-mods-development-de3055a10d31
@@ -20,5 +21,3 @@ Random pieces of DayZ code.
 <code>
   %localappdata%/DayZ
 </code>
-
-`dummy`

@@ -1,5 +1,5 @@
 # DayZ_snippets
-Random pieces of DayZ code. I use this as a personal notebook on various things...
+Random pieces of DayZ code. I use this as a personal notebook on various things.....
 
 ## Links to good resources ##
 * Syntax: https://community.bistudio.com/wiki/DayZ:Enforce_Script_Syntax

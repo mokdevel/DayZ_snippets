@@ -27,13 +27,11 @@ class TDarc_RouteArray
 //--------------------------------------------------------------
 class DarcRoute
 {
-//	ref array<autoptr TDarc_RouteArray> routeArray = new array<autoptr TDarc_RouteArray>;
+	const int WAYPOINT_DISTANCE_LIMIT = 100;	// Distance for waypoints to stop searching for more.
 
 	void DarcRoute()
 	{
 		Print("[DarcRoute]:Constructor");
-//		PrintLocations();
-//		PrintLocations({"Capital", "MilitaryBase"});
 	}
 	
 	void ~DarcRoute()
@@ -44,36 +42,59 @@ class DarcRoute
 	//--------------------------------------------------------------
 	// CreateRoute
 	//	
-	// routeArray:
-	// pos_start, pos_end: Start and end positions for the route
-	// friction: The friction on the surface.
+	// @brief Searches for a safe point between the two vectors (v0 and v1). There are two tries where 
+	// 		the first is closer to the middle and the second a little bit further.
+	//		Returns "0 0 0" if nothing has been found
+	//
+	// @param routeArray : Array where the route will be stored.
+	//		Example: ref array<autoptr TDarc_RouteArray> routeArray = new array<autoptr TDarc_RouteArray>;
+	// @param array positions : The route on a higher level.
+	//		As a minimum two values needs to be provided (start and end) for the route. The height 
+	//		for the position will be fixed
+	//		Example: {"3702 0 2440", "2789 0 3386"} 
+	// @param bool exactPosition : Shall the initial routepoints use the exact provided position or 
+	//		look for a position close by
+	// @param float friction : The friction on the surface.
 	//		0.87  : road
 	//		<0.87 : not road :-)
 	//
-	// Searches for a safe point between the two vectors (v0 and v1). There are two tries where 
-	// the first is closer to the middle and the second a little bit further.
-	//
-	// Returns "0 0 0" if nothing has been found
 	//--------------------------------------------------------------
 	
-	void CreateRoute(array<autoptr TDarc_RouteArray> routeArray, vector pos_start, vector pos_end, float friction = 0.87)
+	void CreateRoute(array<autoptr TDarc_RouteArray> routeArray, array<vector> positions, bool exactPosition = false, float friction = 0.87)
 	{
 		Print("[DarcRoute]:CreateRoute");
 //		PrintLocations();
 		
 		vector pos = "0 0 0";
+		vector pos_tmp = "0 0 0";
+		int i;
+		float routeDistance = 0;
 		
-		//Add start and end as the first positions. 
-		//Fix height.
-		pos = pos_start;
-		pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
-		routeArray.Insert( TDarc_RouteArray(pos, "R.start"));
-		pos = pos_end;
-		pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
-		routeArray.Insert( TDarc_RouteArray(pos, "R.end"));
+		//Add the initial positions with fixed height.
+		for ( i = 0; i < positions.Count(); ++i ) 
+		{
+			pos = positions[i];			
+			
+			if (!exactPosition)
+			{
+				pos_tmp = FindSafeSpawnPos(pos, 200, 2.0, friction);
+				if (pos_tmp == "0 0 0")
+					pos_tmp = pos;
+				pos = pos_tmp;
+			}
+			
+			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
+			routeArray.Insert( TDarc_RouteArray(pos, "R."+i));
+		}
 
-		int iterations = Math.Round( vector.Distance( pos_start, pos_end ) / 250 );
-		Print("[DarcRoute]:CreateRoute:Using " + iterations + " iterations for a distance of " + vector.Distance( pos_start, pos_end ));
+		//Count the approx route length for the iterations
+		for ( i = 0; i < positions.Count() - 1; ++i ) 
+		{
+			routeDistance += vector.Distance( positions[i], positions[i+1]);
+		}
+		
+		int iterations = Math.Round( routeDistance / 200 );
+		Print("[DarcRoute]:CreateRoute:Using " + iterations + " for a distance of " + routeDistance);
 		
 		private vector v0, v1;
 		private TDarc_RouteArray routePoint0, routePoint1;
@@ -82,7 +103,7 @@ class DarcRoute
 		{
 			int idx = 0;
 			int i_limit = routeArray.Count() - 1;
-			for ( int i = 0; i < i_limit; ++i ) 
+			for ( i = 0; i < i_limit; ++i ) 
 			{
 				routePoint0 = routeArray.Get(idx);
 				routePoint1 = routeArray.Get(idx+1);
@@ -102,17 +123,57 @@ class DarcRoute
 			}
 		}
 	}
+
+	//--------------------------------------------------------------
+	// CreateRoute_Area
+	//
+	// @brief: Creates a random routing in position within radius. This used for creating guarding 
+	//		patrols for example in a city.
+	//
+	// @param routeArray : Where to store final route
+	// @param position   : Center of the area
+	// @param radius     : Radies of the area where the route is created
+	// @param friction   : See CreateRoute
+	//--------------------------------------------------------------
 	
+	void CreateRoute_Area(array<autoptr TDarc_RouteArray> routeArray, vector position, float radius, float friction = 0.87)
+	{
+		int waypoint_count = radius / 40; 
+		float waypoint_radius = radius / 6;
+		vector pos = "0 0 0";
+		array<vector> positions = new array<vector>;
+		
+		float x_start = position[0] - radius;
+		float y_start = position[1];
+		float z_start = position[2] - radius;
+		
+		for ( int i = 0; i < waypoint_count; ++i ) 
+		{		
+			pos[0] = x_start + Math.RandomFloat(0, radius * 2);
+			pos[2] = z_start + Math.RandomFloat(0, radius * 2);
+			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
+			
+			pos = FindSafeSpawnPos(pos, waypoint_radius, 1.0, friction);
+			if (pos != "0 0 0")
+			{
+				Print("addind: " + pos);
+				positions.Insert(pos);				
+			}
+		}
+		Print("pos ----------------------------- :"+positions);
+		CreateRoute(routeArray, positions);
+	}
+		
 	//--------------------------------------------------------------
 	// RoutePointFind
 	//	
-	// v0, v1: Vectors 
-	// friction: See CreateRoute
+	// @brief Searches for a safe point between the two vectors (v0 and v1). There are two tries where 
+	// 		the first is closer to the middle and the second a little bit further.
+	// 		Returns "0 0 0" if nothing has been found
 	//
-	// Searches for a safe point between the two vectors (v0 and v1). There are two tries where 
-	// the first is closer to the middle and the second a little bit further.
+	// @param v0, v1   : The route point is searched between these two vectors
+	// @param friction : See CreateRoute
 	//
-	// Returns "0 0 0" if nothing has been found
 	//--------------------------------------------------------------
 	
 	vector RoutePointFind(vector v0, vector v1, float friction = 0.87)
@@ -127,14 +188,14 @@ class DarcRoute
 		pos = "0 0 0";
 				
 		radius = vector.Distance( v0, v1 ) / 2;
-		if (radius > 100)
+		if (radius > WAYPOINT_DISTANCE_LIMIT)
 		{	
 			//First try
 			pos = FindSafeSpawnPos(vp, radius * 0.4, 2.0, friction);
 			if (pos == "0 0 0")
 			{
 				//Second try
-				pos = FindSafeSpawnPos(vp, radius * 0.7, 2.0, friction);
+				pos = FindSafeSpawnPos(vp, radius * 0.9, 2.0, friction);
 			}
 			
 			if (pos != "0 0 0")

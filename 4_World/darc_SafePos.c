@@ -1,10 +1,12 @@
 //--------------------------------------------------------------
 // FindSafeSpawnPos
 //
-// pos: 
-// radius: 
-// size: The size of object that should fit to spawn
-// friction_limit: The friction on the surface.
+// @brief Search a safe position to spawn an object of chosen size.
+//
+// @param pos	 		 : The position from where to search for a safe position
+// @param radius 		 : THe radius for searching around pos
+// @param size	 		 : The size of object that should fit to spawn
+// @param friction_limit : The friction on the surface.
 //		0.94  : road
 //		<0.94 : not road :-)
 //

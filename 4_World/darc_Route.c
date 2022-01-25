@@ -42,9 +42,7 @@ class DarcRoute
 	//--------------------------------------------------------------
 	// CreateRoute
 	//	
-	// @brief Searches for a safe point between the two vectors (v0 and v1). There are two tries where 
-	// 		the first is closer to the middle and the second a little bit further.
-	//		Returns "0 0 0" if nothing has been found
+	// @brief <TBD>
 	//
 	// @param routeArray : Array where the route will be stored.
 	//		Example: ref array<autoptr TDarc_RouteArray> routeArray = new array<autoptr TDarc_RouteArray>;
@@ -71,7 +69,7 @@ class DarcRoute
 		float routeDistance = 0;
 		
 		//Add the initial positions with fixed height.
-		for ( i = 0; i < positions.Count(); ++i ) 
+		for ( i = 0; i < positions.Count(); i++ ) 
 		{
 			pos = positions[i];			
 			
@@ -88,7 +86,7 @@ class DarcRoute
 		}
 
 		//Count the approx route length for the iterations
-		for ( i = 0; i < positions.Count() - 1; ++i ) 
+		for ( i = 0; i < positions.Count() - 1; i++ ) 
 		{
 			routeDistance += vector.Distance( positions[i], positions[i+1]);
 		}
@@ -99,17 +97,17 @@ class DarcRoute
 		private vector v0, v1;
 		private TDarc_RouteArray routePoint0, routePoint1;
 		
-		for ( int j = 0; j < 5; ++j ) 
+		for ( int j = 0; j < 5; j++ ) 
 		{
 			int idx = 0;
 			int i_limit = routeArray.Count() - 1;
-			for ( i = 0; i < i_limit; ++i ) 
+			for ( i = 0; i < i_limit; i++ ) 
 			{
 				routePoint0 = routeArray.Get(idx);
 				routePoint1 = routeArray.Get(idx+1);
 				v0 = routePoint0.Pos;
 				v1 = routePoint1.Pos;
-				pos = RoutePointFind(v0, v1);
+				pos = RoutePointFind(v0, v1, friction);
 				if (pos != "0 0 0")
 				{
 					routeArray.InsertAt( TDarc_RouteArray(pos, "R."+idx), idx+1);
@@ -147,7 +145,7 @@ class DarcRoute
 		float y_start = position[1];
 		float z_start = position[2] - radius;
 		
-		for ( int i = 0; i < waypoint_count; ++i ) 
+		for ( int i = 0; i < waypoint_count; i++ ) 
 		{		
 			pos[0] = x_start + Math.RandomFloat(0, radius * 2);
 			pos[2] = z_start + Math.RandomFloat(0, radius * 2);
@@ -160,7 +158,7 @@ class DarcRoute
 				positions.Insert(pos);				
 			}
 		}
-		Print("pos ----------------------------- :"+positions);
+		
 		CreateRoute(routeArray, positions);
 	}
 		
@@ -194,8 +192,8 @@ class DarcRoute
 			pos = FindSafeSpawnPos(vp, radius * 0.4, 2.0, friction);
 			if (pos == "0 0 0")
 			{
-				//Second try
-				pos = FindSafeSpawnPos(vp, radius * 0.9, 2.0, friction);
+				//Second try. The radius is larger and friction a little less.
+				pos = FindSafeSpawnPos(vp, radius * 0.9, 2.0, friction * 0.8);
 			}
 			
 			if (pos != "0 0 0")

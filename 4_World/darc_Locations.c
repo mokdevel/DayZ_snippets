@@ -1,4 +1,19 @@
-// Prints all locations from a map to .rpt
+//--------------------------------------------------------------
+// @file darc_Location.c
+// @author darc
+//
+// @brief A set of functions for location handling.
+//
+// Location types may have different names depending on the map. 
+// Some maps listed as examples.
+//
+// ChernarusPlus:
+// 		"Capital", "City", "Village", "Hill", "Local", "Marine", "Ruin", "MilitaryBase", "MilitaryOutpost"
+// 		"LocalOffice", "ViewPoint", "RailroadStation" - These three are filtered by default
+//
+//
+//
+//--------------------------------------------------------------
 
 class TLocationInfo
 {
@@ -15,25 +30,25 @@ class TLocationInfo
 }
 
 //--------------------------------------------------------------
-// GetLocations
+// PrintLocations
 //
-// Print location information to rpt.  
+// @brief Print location information to rpt.  
 //
-// Example:
+// @code
 //		PrintLocations();	//List everything except the ones listed in m_blockList
 //		PrintLocations({"Capital", "MilitaryBase"});	//List every Capital and MilitaryBase on the map
+// @codeend
 //--------------------------------------------------------------
 
 void PrintLocations(TStringArray locationsToFind = null)
 {	
-	int locationsFound;
 	ref array<autoptr TLocationInfo> locs = new array<autoptr TLocationInfo>;
 
-	locationsFound = GetLocations(locs, locationsToFind);
+	bool locationsFound = GetLocations(locs, locationsToFind);
 	
-	Print("[darc_Locations] getLocations found " + locationsFound + " locations");
+	Print("[darc_Locations] getLocations found " + locs.Count() + " locations");
 	
-	for ( int i = 0; i < locs.Count(); ++i ) 
+	for ( int i = 0; i < locs.Count(); i++ ) 
 	{
 		TLocationInfo li;
 		li = locs.Get(i);
@@ -44,12 +59,16 @@ void PrintLocations(TStringArray locationsToFind = null)
 //--------------------------------------------------------------
 // GetLocations
 //
-// Find locations from a map and provides an array 
+// @brief Find locations from a map and provides an array 
 //
 // locationArray: array 
 // locationsToFind: array of location types to find. 
-// 		"Capital", "City", "Village", "Hill", "Local", "Marine", "Ruin", "MilitaryBase", "MilitaryOutpost"
-// 		"LocalOffice", "ViewPoint", "RailroadStation" - These three are filtered by default
+//
+// @code
+//		ref array<autoptr TLocationInfo> locs = new array<autoptr TLocationInfo>;
+//		TStringArray locationsToFind = {"Capital", "MilitaryBase"};
+//		bool locationsFound = GetLocations(locs, locationsToFind);
+// @codeend
 //
 // Original code from ExpansionLocatorModule.c ( https://github.com/salutesh/DayZ-Expansion-Scripts )
 //
@@ -137,5 +156,8 @@ bool GetLocations(array<autoptr TLocationInfo> locationArray, TStringArray locat
 		locationArray.Insert(TLocationInfo(location_name, location_type, Vector( location_position[0], 0, location_position[1] )));
 	}
 	
-	return locationArray.Count();
+	if (locationArray.Count() > 0) 
+		return true;
+	else 
+		return false;
 }

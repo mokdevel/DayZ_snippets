@@ -38,12 +38,15 @@ void darc_PrintCfg(string cfg) {
 		GetGame().ConfigGetTextArray(cfg, arr);		
 	}	
 	
-	arr.Sort();
-				
-	for( i = 0; i < arr.Count(); i++)
+/*	for( i = 0; i < arr.Count(); i++)
 	{
-		Print("darc_PrintCfg: " + arr[i]);
-	}	
+		Print ("count:" + GetGame().ConfigGetChildrenCount ( arr[i] ) );	
+		
+//		GetGame().ConfigGetChildName ( cfg, i, child_name );
+//		arr.Insert(child_name);
+	}	*/
+	
+	darc_PrintList(arr);
 }
 
 void darc_PrintCfg_ex(string cfg) {
@@ -57,33 +60,15 @@ void darc_PrintCfg_ex(string cfg) {
 	
 	GetGame().ConfigGetTextArray(cfg_path, arr);
 
-	arr.Sort();
-				
-	for( i = 0; i < arr.Count(); i++)
-	{
-		Print("darc_PrintCfg_ex: " + arr[i]);
-	}	
+	darc_PrintList(arr);
 }
 
 void darc_PrintList(TStringArray arr) 
 {
-	int i;
-
-	Print("darc_PrintList: " + arr[i]);
-	
 	arr.Sort();
 				
-	for( i = 0; i < arr.Count(); i++)
+	for( int i = 0; i < arr.Count(); i++)
 	{
 		Print("darc_PrintList: " + arr[i]);
 	}	
 }
-
-/*
-Shape m_Shape;
-int color = 0xFF003300;
-vector pts[2];		
-pts[0] = pos;
-pts[1] = "50 50 50";
-m_Shape = Shape.CreateLines(color, ShapeFlags.NOZBUFFER, pts, 2);
-*/

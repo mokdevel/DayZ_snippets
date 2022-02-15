@@ -14,11 +14,19 @@ if NOT exist P:\ (
 
 ::---------------------------------------------------------------------------
 
+set DAYZ_EXPERIMENTAL=FALSE
+
+::---------------------------------------------------------------------------
+
 :: Copy a windowed client config
 :: DayZ overwrites the file annoyingly and if you want to have a small window 
 :: while developing, copy a fresh .cfg at start.
-copy .\DayZ_windowed.cfg C:\Users\anter\Documents\DayZ\DayZ.cfg 1>NUL
-copy .\DayZ_windowed.cfg "C:\Users\anter\Documents\DayZ Exp\DayZ Exp.cfg" 1>NUL
+set documentsLocation=C:\Users\anter\Documents
+
+copy .\DayZ_windowed.cfg %documentsLocation%\DayZ\DayZ.cfg 1>NUL
+if /I NOT "%DAYZ_EXPERIMENTAL%"=="true" GOTO NOT_EXP_1
+	copy .\DayZ_windowed.cfg "%documentsLocation%\DayZ Exp\DayZ Exp.cfg" 1>NUL
+:NOT_EXP_1
 
 :: Game location
 set dayzLocation=F:\SteamLibrary\steamapps\common\DayZ\
@@ -94,11 +102,12 @@ exit /b
 ::---------------------------------------------------------------------------
 :START_SETUP
 
-:: !!! If running experimental, uncomment the lines below !!!
-echo -------------------------------------------------
-echo ----------- RUNNING DAYZ EXPERIMENTAL -----------
-echo -------------------------------------------------
-set dayzLocation=%dayzLocation_exp%
+if /I NOT "%DAYZ_EXPERIMENTAL%"=="true" GOTO NOT_EXP_2
+	echo -------------------------------------------------
+	echo ----------- RUNNING DAYZ EXPERIMENTAL -----------
+	echo -------------------------------------------------
+	set dayzLocation=%dayzLocation_exp%
+:NOT_EXP_2
 
 ::---------------------------------------------------------------------------
 

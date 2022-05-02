@@ -3,7 +3,8 @@ Random pieces of DayZ code. I use this as a personal notebook on various things.
 
 ## Links to good resources ##
 * Syntax: https://community.bistudio.com/wiki/DayZ:Enforce_Script_Syntax
-* Samples: https://github.com/BohemiaInteractive/DayZ-Samples
+* Bohemia Samples: https://github.com/BohemiaInteractive/DayZ-Samples
+* Community Samples: https://github.com/Thurston00/DayZ-CommunitySamples
 * Class names: https://github.com/CypherMediaGIT/DayZClassNames2020/blob/master/classname2020
 * Code explorer (for 1.06): https://dayzexplorer.zeroy.com
 
